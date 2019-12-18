@@ -17,16 +17,18 @@ public class Bill {
     private long created;
     private long last_updated;
     private Order order;
+    private Coupon coupon;
     private DB db;
     
     public int get_id(){
         return this.id;
     }
     
-    public Bill(int tbl_employee_id, Order order) {
+    public Bill(int tbl_employee_id, Order order, Coupon coupon) {
         this.db = new DB();
         this.tbl_employee_id = tbl_employee_id;
         this.order = order;
+        this.coupon = coupon;
         this.created = new java.util.Date().getTime();
     }
     
@@ -35,6 +37,12 @@ public class Bill {
         long inserted_id =  this.db.execute_insert(query);
         if(inserted_id > 0) this.id = (int)inserted_id;
         System.out.println("inserted_id -> " + inserted_id);
+        if(this.coupon != null){
+            System.out.println("Bill has coupon!");
+            this.coupon.apply_to_bill(this.id);
+        } else {
+            System.out.println("Bill do not has coupon!");
+        }
         return this.id;
     }
     

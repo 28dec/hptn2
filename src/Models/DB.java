@@ -61,9 +61,9 @@ public class DB {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if(rs.next()){
                     rtn = rs.getInt(1);
-                    System.out.println("Bill created! id -> " + rtn);
+                    System.out.println("New record created! id -> " + rtn);
                 } else {
-                    System.out.println("Bill not created!");
+                    System.out.println("New record not created!");
                     return -1;
                 }
             }

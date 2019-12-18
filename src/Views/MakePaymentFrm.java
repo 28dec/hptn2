@@ -24,7 +24,7 @@ public class MakePaymentFrm extends javax.swing.JFrame {
      */
     public MakePaymentFrm(Controller controller) {
         initComponents();
-        bill_tbl.getColumnModel().getColumn(0).setPreferredWidth(5);
+//        bill_tbl.getColumnModel().getColumn(0).setPreferredWidth(5);
         this.controller = controller;
         this.customer_jlb.setText(this.controller.get_reservation().get_customer_info());
         this.emp_code_jlb.setText(this.controller.get_employee().get_code());
@@ -270,8 +270,8 @@ public class MakePaymentFrm extends javax.swing.JFrame {
 
     private void make_payment_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_make_payment_btnActionPerformed
         System.out.println(evt.getActionCommand());
-        this.controller.create_bill();
-        this.bill_created();
+        int bill_id = this.controller.create_bill();
+        this.bill_created(bill_id);
         this.make_payment_btn.setEnabled(false);
     }//GEN-LAST:event_make_payment_btnActionPerformed
 
@@ -330,8 +330,8 @@ public class MakePaymentFrm extends javax.swing.JFrame {
         model.fireTableDataChanged();
     }
     
-    public void bill_created(){
-        JOptionPane.showMessageDialog(null, "Hệ thống đã lưu!\nXin mời lấy hóa đơn!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+    public void bill_created(int bill_id){
+        JOptionPane.showMessageDialog(null, "Hệ thống đã lưu!\nId hóa đơn trong cơ sở dữ liệu -> " + bill_id + "\nXin mời lấy hóa đơn!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
     }
 
 }

@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
  */
 public class Controller {
     
-    private DB db;
     private Reservation reservation;
     private Order order;
     private Bill bill;
@@ -30,7 +29,6 @@ public class Controller {
     private Employee employee;
     
     public Controller(){
-        this.db = new DB();
         this.reservation = new Reservation();
         this.order = new Order();
         this.coupon = new Coupon();
@@ -57,14 +55,25 @@ public class Controller {
         return employee;
     }
     
-    public void set_db(DB db) {
-        this.db = db;
-    }
+//    public void set_reservation(Reservation reservation) {
+//        this.reservation = reservation;
+//    }
+    
+//    public void set_order(Order order) {
+//        this.order = order;
+//    }
 
-    public void set_reservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
+//    public void set_bill(Bill bill) {
+//        this.bill = bill;
+//    }
 
+//    public void set_coupon(Coupon coupon) {
+//        this.coupon = coupon;
+//    }
+    
+//    public void set_employee(Employee employee){
+//        this.employee = employee;
+//    }
     public void set_reservation_by_id(List<Reservation> reservations, int reservation_id){
         for(Reservation r: reservations){
             if(r.get_id() == reservation_id){
@@ -74,22 +83,6 @@ public class Controller {
                 break;
             }
         }
-    }
-    
-    public void set_order(Order order) {
-        this.order = order;
-    }
-
-    public void set_bill(Bill bill) {
-        this.bill = bill;
-    }
-
-    public void set_coupon(Coupon coupon) {
-        this.coupon = coupon;
-    }
-    
-    public void set_employee(Employee employee){
-        this.employee = employee;
     }
     
     public List<Reservation> get_all_reservations(){
@@ -118,10 +111,10 @@ public class Controller {
         
     }
     
-    public void create_bill(){
-        this.bill = new Bill(this.employee.get_id(), this.order);
-        this.bill.create();
-        this.coupon.apply_to_bill(this.bill.get_id());
+    public int create_bill(){
+        this.bill = new Bill(this.employee.get_id(), this.order, this.coupon);
+        int bill_id = this.bill.create();
         this.reservation.mark_as_done();
+        return bill_id;
     }
 }
