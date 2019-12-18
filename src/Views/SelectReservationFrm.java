@@ -5,6 +5,7 @@
  */
 package Views;
 
+import Controllers.Controller;
 import Models.*;
 import java.util.*;
 import javax.swing.JFrame;
@@ -85,11 +86,12 @@ public class SelectReservationFrm extends javax.swing.JFrame {
     private void make_payment_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_make_payment_btnActionPerformed
         System.out.println(evt.getActionCommand());
         if(this.reservations_cbb.getSelectedItem().toString().equals("...")){
-            JOptionPane.showMessageDialog(null, "Chưa chọn bàn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Chưa chọn bàn!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
         } else {
             this.controller.set_reservation_by_id(reservations, Integer.parseInt(this.reservations_cbb.getSelectedItem().toString().split("-")[0]));
             JFrame make_payment_frm = new MakePaymentFrm(this.controller);
             make_payment_frm.setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_make_payment_btnActionPerformed
 

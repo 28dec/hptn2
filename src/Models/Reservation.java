@@ -33,7 +33,6 @@ public class Reservation {
         this.created = created;
         this.last_updated = last_updated;
         this.db = new DB();
-        System.out.println("hello");
         this.customer = this.get_customer_by_id(tbl_customer_id);
     }
     
@@ -62,6 +61,12 @@ public class Reservation {
         return String.format("[%s] %s", this.customer.get_code(), this.customer.get_full_name());
     }
     
+    public int mark_as_done(){
+        String query = "UPDATE tbl_reservation SET `status` = 'DONE' WHERE `id` = " + this.id;
+        this.db.execute_update(query);
+        return 0;
+    }
+    
     public void set_id(int id){
         this.id = id;
     }
@@ -87,7 +92,7 @@ public class Reservation {
     public ResultSet get_all_record(){
         System.out.println(this.getClass() + "get_all_record() performed!");
         ResultSet rs = null;
-        String query = String.format("select `%s`, `%s`, `%s`, `%s`, `%s`, `%s`, `%s` from tbl_reservation;", "id", "tbl_employee_id", "tbl_customer_id", "tbl_mealtable_id", "is_deleted", "created", "last_updated");
+        String query = "select `id`, `tbl_employee_id`, `tbl_customer_id`, `tbl_mealtable_id`, `is_deleted`, `created`, `last_updated` from tbl_reservation WHERE `status` = 'PENDING';";
         rs = this.db.execute_query(query);
         return rs;
     }

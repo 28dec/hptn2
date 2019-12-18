@@ -5,7 +5,7 @@
  */
 package Views;
 
-import Models.Controller;
+import Controllers.Controller;
 import javax.swing.JFrame;
 
 /**

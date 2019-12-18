@@ -36,7 +36,7 @@ public class DB {
     }
     
     public ResultSet execute_query(String query){
-        System.out.println(this.getClass() + " execute_query() performed! arg -> " + query);
+        System.out.println(this.getClass() + " SELECT QUERY -> " + query);
         ResultSet rs = null;
         try {
             Statement stmt = conn.createStatement();
@@ -50,29 +50,31 @@ public class DB {
     }
     
     public int execute_insert(String query){
+        System.out.println(this.getClass() + " INSERT QUERY -> " + query);
         int rtn = 0;
         try {
             Statement stmt = conn.createStatement();
-            int affected_rows = stmt.executeUpdate(query);
+            int affected_rows = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
             if(affected_rows == 0){
                 return -1;
             } else {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if(rs.next()){
-                    return rs.getInt(1); // id of inserted record
+                    rtn = rs.getInt(1);
+                    System.out.println("Bill created! id -> " + rtn);
                 } else {
+                    System.out.println("Bill not created!");
                     return -1;
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
-        finally{
-            return rtn;
-        }
+        return rtn;
     }
     
     public int execute_update(String query){
+        System.out.println(this.getClass() + " UPDATE QUERY -> " + query);
         int rtn = 0;
         try {
             Statement stmt = conn.createStatement();
@@ -80,9 +82,7 @@ public class DB {
         } catch (SQLException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
-        finally{
-            return rtn;
-        }
+        return rtn;
     }
     
 }

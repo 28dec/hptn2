@@ -3,8 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
+package Controllers;
 
+import Models.Bill;
+import Models.Combo;
+import Models.Coupon;
+import Models.DB;
+import Models.Employee;
+import Models.Order;
+import Models.Product;
+import Models.Reservation;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -26,7 +34,7 @@ public class Controller {
         this.reservation = new Reservation();
         this.order = new Order();
         this.coupon = new Coupon();
-        this.employee = new Employee(0, 0, "EMP_1102", 1, 0, 0, 0, "Nguyễn", "Hoàng", "Long", "0968686717", "bachvkhoa@gmail.com", "Bắc Ninh", 0, 0, 0);
+        this.employee = new Employee(1, 1, "EMP_1102", 1, 0, 0, 0, "Nguyễn", "Hoàng", "Long", "0968686717", "bachvkhoa@gmail.com", "Bắc Ninh", 0, 0, 0);
     }
 
     public Reservation get_reservation() {
@@ -61,6 +69,8 @@ public class Controller {
         for(Reservation r: reservations){
             if(r.get_id() == reservation_id){
                 this.reservation = r;
+                this.order.update_order_by_reservation_id(reservation_id);
+                System.out.println("Controller Order id = " + this.order.get_id());
                 break;
             }
         }
@@ -96,10 +106,22 @@ public class Controller {
     
     public int apply_coupon_to_bill(String coupon){
         int coupon_availability = this.coupon.get_coupon_availability(coupon);
-        if(coupon_availability != -1) return coupon_availability;
-        this.bill = new Bill(this.employee.get_id(), this.order.get_id());
+        if(coupon_availability > 0){
+            this.coupon.set_code(coupon);
+            this.coupon.set_percentage(coupon_availability);
+            this.update_bill_price(coupon_availability);
+        }
+        return coupon_availability;
+    }
+    
+    public void update_bill_price(float percentage){
+        
+    }
+    
+    public void create_bill(){
+        this.bill = new Bill(this.employee.get_id(), this.order);
         this.bill.create();
-        this.coupon.apply_coupon_to_bill(coupon, this.bill.get_id());
-        return 0;
+        this.coupon.apply_to_bill(this.bill.get_id());
+        this.reservation.mark_as_done();
     }
 }

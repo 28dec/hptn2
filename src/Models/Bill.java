@@ -16,22 +16,26 @@ public class Bill {
     private int is_deleted;
     private long created;
     private long last_updated;
+    private Order order;
     private DB db;
     
     public int get_id(){
         return this.id;
     }
     
-    public Bill(int tbl_employee_id, int tbl_order_id) {
+    public Bill(int tbl_employee_id, Order order) {
         this.db = new DB();
         this.tbl_employee_id = tbl_employee_id;
-        this.tbl_order_id = tbl_order_id;
+        this.order = order;
         this.created = new java.util.Date().getTime();
     }
     
     public int create(){
-        String query = String.format("INSERT INTO tbl_bill(`tbl_employee_id`, `tbl_order_id`, `created`, `last_updated`) VALUES %d, %d, %ld, %ld", this.tbl_employee_id, this.tbl_order_id, this.created, 0);
-        return  this.db.execute_insert(query);
+        String query = String.format("INSERT INTO tbl_bill(`tbl_employee_id`, `tbl_order_id`, `created`, `last_updated`) VALUES (%d, %d, %d, %d);", this.tbl_employee_id, this.order.get_id(), this.created, 0);
+        long inserted_id =  this.db.execute_insert(query);
+        if(inserted_id > 0) this.id = (int)inserted_id;
+        System.out.println("inserted_id -> " + inserted_id);
+        return this.id;
     }
     
     @Override

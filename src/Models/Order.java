@@ -32,16 +32,20 @@ public class Order {
     }
     
     public void update_order_by_reservation_id(int reservation_id){
-        String query = String.format("SELECT `%s`, `%s`, `%s`, `%s`, `%s`, `%s` FROM tbl_order WHERE `is_deleted` = 0 AND `tbl_reservation_id` = %d;", "id", "tbl_reservation_id", "tbl_employee_id", "is_deleted", "created", "last_updated", reservation_id);
+        String query = String.format("SELECT `%s`, `%s`, `%s`, `%s`, `%s`, `%s` FROM tbl_order WHERE `is_deleted` = 0 AND `tbl_reservation_id` = %d LIMIT 1;", "id", "tbl_reservation_id", "tbl_employee_id", "is_deleted", "created", "last_updated", reservation_id);
         ResultSet rs = this.db.execute_query(query);
         try {
-            while(rs.next()){
+            if(rs.next()){
                 this.id = rs.getInt("id");
                 this.tbl_employee_id = rs.getInt("tbl_employee_id");
                 this.tbl_reservation_id = rs.getInt("tbl_employee_id");
                 this.is_deleted = rs.getInt("is_deleted");
                 this.created = rs.getLong("created");
                 this.last_updated = rs.getLong("last_updated");
+                System.out.println("Order updated with reservation id -> " + reservation_id);
+                System.out.println("Order id = " + this.id);
+            } else {
+                Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, "CAN'T UPDATE ORDER BY RESERVATION ID!");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,7 +54,6 @@ public class Order {
     
     public List<Product> get_all_products_by_reservation_id(int reservation_id){
         System.out.println(this.getClass() + " get_all_products_by_reservation_id() performed! reservation_id = " + reservation_id);
-        update_order_by_reservation_id(reservation_id);
         List<Product> rtn = new ArrayList();
         try {
             ResultSet rs = get_all_products_record_by_order_id(this.id);

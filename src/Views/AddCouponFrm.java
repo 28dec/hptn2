@@ -5,11 +5,10 @@
  */
 package Views;
 
-import Models.*;
-import java.util.*;
+import Controllers.Controller;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 /**
  *
  * @author longnh
@@ -17,16 +16,18 @@ import javax.swing.JOptionPane;
 public class AddCouponFrm extends javax.swing.JFrame {
     
     private final int UNKNOWN_COUPON = -1;
-    private final int USED_COUPON = -2;
-    private final int EXPIRED_COUPON = -3;
+    private final int EXPIRED_COUPON = -2;
+    private final int USED_COUPON = -3;
     
     private Controller controller;
+    private MakePaymentFrm parent;
     /**
      * Creates new form AddCouponFrm
      */
-    public AddCouponFrm(Controller controller) {
+    public AddCouponFrm(MakePaymentFrm parent, Controller controller) {
         initComponents();
         this.controller = controller;
+        this.parent = parent;
     }
 
     /**
@@ -88,25 +89,29 @@ public class AddCouponFrm extends javax.swing.JFrame {
         if(validate_coupon(coupon) == true){
             int result = this.controller.apply_coupon_to_bill(coupon);
             if(result == USED_COUPON){
-                JOptionPane.showMessageDialog(null, "Mã giảm giá đã được sử dụng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Mã giảm giá đã được sử dụng!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             } else if(result == EXPIRED_COUPON){
-                JOptionPane.showMessageDialog(null, "Mã giảm giá đã hết thời hạn sử dụng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Mã giảm giá đã hết thời hạn sử dụng!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             } else if(result == UNKNOWN_COUPON){
-                JOptionPane.showMessageDialog(null, "Mã giảm giá không tồn tại trong cơ sở dữ liệu!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Mã giảm giá không tồn tại trong cơ sở dữ liệu!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Mã giảm giá được chấp nhận! Hóa đơn được giảm " + result + "%", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+                this.parent.update_bill_price(result);
+                this.dispose();
             }
         }
     }//GEN-LAST:event_confirm_coupon_btnActionPerformed
 
     private boolean validate_coupon(String coupon){
         if(coupon.equals("")){
-            JOptionPane.showMessageDialog(null, "Chưa nhập mã giảm giá", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Chưa nhập mã giảm giá", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return false;
         } else{
             final String standard_coupon_pattern = "^[a-zA-Z0-9]*$";
             Pattern p = Pattern.compile(standard_coupon_pattern);
             Matcher m = p.matcher(coupon);
             if(!m.find()){
-                JOptionPane.showMessageDialog(null, "Mã giảm giá chứa ký tự đặc biệt! Không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Mã giảm giá chứa ký tự đặc biệt! Không hợp lệ", "Thông báo", JOptionPane.PLAIN_MESSAGE);
                 return false;
             }
         }
